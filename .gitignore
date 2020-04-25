@@ -48,3 +48,8 @@ nosetests.xml
 *.fdb_latexmk
 *.synctex.gz
 paper.pdf
+*.zip
+training/
+*.bin
+vectors2.txt
+vocab.txt
