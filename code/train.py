@@ -26,49 +26,48 @@ def main():
     parser = argparse.ArgumentParser()
 
     parser.add_argument("--txt",
-        dest = "txt",
-        help = "The files that contain the training examples",
-    )
+                        dest="txt",
+                        help="The files that contain the training examples",
+                        )
     parser.add_argument("--annotations",
-        dest = "con",
-        help = "The files that contain the labels for the training examples",
-    )
+                        dest="con",
+                        help="The files that contain the labels for the training examples",
+                        )
     parser.add_argument("--val-txt",
-        dest = "val_txt",
-        help = "The files that contain the validation examples",
-    )
+                        dest="val_txt",
+                        help="The files that contain the validation examples",
+                        )
     parser.add_argument("--val-annotations",
-        dest = "val_con",
-        help = "The files that contain the labels for the validation examples",
-    )
+                        dest="val_con",
+                        help="The files that contain the labels for the validation examples",
+                        )
     parser.add_argument("--test-txt",
-        dest = "test_txt",
-        help = "The files that contain the test examples",
-    )
+                        dest="test_txt",
+                        help="The files that contain the test examples",
+                        )
     parser.add_argument("--test-annotations",
-        dest = "test_con",
-        help = "The files that contain the labels for the test examples",
-    )
+                        dest="test_con",
+                        help="The files that contain the labels for the test examples",
+                        )
     parser.add_argument("--model",
-        dest = "model",
-        help = "Path to the model that should be generated",
-    )
+                        dest="model",
+                        help="Path to the model that should be generated",
+                        )
     parser.add_argument("--log",
-        dest = "log",
-        help = "Path to the log file for training info",
-        default = os.path.join(CLINER_DIR, 'models', 'train.log')
-    )
+                        dest="log",
+                        help="Path to the log file for training info",
+                        default=os.path.join(CLINER_DIR, 'models', 'train.log')
+                        )
     parser.add_argument("--use-lstm",
-        dest = "use_lstm",
-        help = "Whether to use an LSTM model",
-        action = 'store_true',
-        default = False
-    )
+                        dest="use_lstm",
+                        help="Whether to use an LSTM model",
+                        action='store_true',
+                        default=True
+                        )
     parser.add_argument("--format",
-        dest = "format",
-        help = "Data format ( i2b2 )"
-    )
-
+                        dest="format",
+                        help="Data format ( i2b2 )"
+                        )
 
     # Parse the command line arguments
     args = parser.parse_args()
@@ -106,14 +105,13 @@ def main():
 
     # Must specify output format
     if args.format not in ['i2b2']:
-        print >>sys.stderr, '\n\tError: Must specify output format'
-        print >>sys.stderr,   '\tAvailable formats: i2b2'
+        print >> sys.stderr, '\n\tError: Must specify output format'
+        print >> sys.stderr, '\tAvailable formats: i2b2'
         sys.stderr.write('\n')
         exit(1)
 
-
     # Collect training data file paths
-    train_txt_files_map = tools.map_files(train_txt_files) 
+    train_txt_files_map = tools.map_files(train_txt_files)
     train_con_files_map = tools.map_files(train_con_files)
 
     training_list = []
@@ -126,15 +124,15 @@ def main():
         val_txt_files = glob.glob(args.val_txt)
         val_con_files = glob.glob(args.val_con)
 
-        val_txt_files_map = tools.map_files(val_txt_files) 
+        val_txt_files_map = tools.map_files(val_txt_files)
         val_con_files_map = tools.map_files(val_con_files)
-        
+
         val_list = []
         for k in val_txt_files_map:
             if k in val_con_files_map:
                 val_list.append((val_txt_files_map[k], val_con_files_map[k]))
     else:
-        val_list=[]
+        val_list = []
 
     # If test data was specified
     if args.test_txt and args.test_con:
@@ -149,35 +147,33 @@ def main():
             if k in test_con_files_map:
                 test_list.append((test_txt_files_map[k], test_con_files_map[k]))
     else:
-        test_list=[]
+        test_list = []
 
     # Train the model
-    train(training_list, args.model, args.format, args.use_lstm, logfile=args.log, val=val_list, test=test_list)
-
-
+    train(training_list, args.model, args.format, args.use_lstm, logfile=args.log, val=val_list,
+          test=test_list)
 
 
 def train(training_list, model_path, format, use_lstm, logfile=None, val=[], test=[]):
-
     # Read the data into a Document object
     train_docs = []
     for txt, con in training_list:
-        doc_tmp = Document(txt,con)
+        doc_tmp = Document(txt, con)
         train_docs.append(doc_tmp)
 
     val_docs = []
     for txt, con in val:
-        doc_tmp = Document(txt,con)
+        doc_tmp = Document(txt, con)
         val_docs.append(doc_tmp)
 
     test_docs = []
     for txt, con in test:
-        doc_tmp = Document(txt,con)
+        doc_tmp = Document(txt, con)
         test_docs.append(doc_tmp)
 
     # file names
     if not train_docs:
-        print( 'Error: Cannot train on 0 files. Terminating train.')
+        print('Error: Cannot train on 0 files. Terminating train.')
         return 1
 
     # Create a Machine Learning model
@@ -190,10 +186,9 @@ def train(training_list, model_path, format, use_lstm, logfile=None, val=[], tes
     print('\nserializing model to %s\n' % model_path)
     with open(model_path, "wb") as m_file:
         pickle.dump(model, m_file)
-        
-    model.log(logfile   , model_file=model_path)
+
+    model.log(logfile, model_file=model_path)
     model.log(sys.stdout, model_file=model_path)
-    
 
 
 if __name__ == '__main__':

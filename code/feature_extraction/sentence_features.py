@@ -44,37 +44,21 @@ enabled_concept_features = frozenset( ["UMLS", "grammar_features"] )
 if enabled['GENIA']:
     feat_genia=None
 
-enabled_IOB_nonprose_sentence_features = []
-enabled_IOB_nonprose_sentence_features.append('pos')
-enabled_IOB_nonprose_sentence_features.append('pos_context')
-enabled_IOB_nonprose_sentence_features.append('prev')
-enabled_IOB_nonprose_sentence_features.append('next')
-enabled_IOB_nonprose_sentence_features.append('unigram_context')
-enabled_IOB_nonprose_sentence_features.append('UMLS')
+enabled_IOB_nonprose_sentence_features = ['pos', 'pos_context', 'prev', 'next', 'unigram_context',
+                                          'UMLS']
 
-enabled_IOB_prose_sentence_features = []
-enabled_IOB_prose_sentence_features.append('unigram_context')
-enabled_IOB_prose_sentence_features.append('pos')
-enabled_IOB_prose_sentence_features.append('pos_context')
-enabled_IOB_prose_sentence_features.append('prev')
-enabled_IOB_prose_sentence_features.append('prev2')
-enabled_IOB_prose_sentence_features.append('next')
-enabled_IOB_prose_sentence_features.append('next2')
-enabled_IOB_prose_sentence_features.append('GENIA')
-enabled_IOB_prose_sentence_features.append('UMLS')
-
-
+enabled_IOB_prose_sentence_features = ['unigram_context', 'pos', 'pos_context', 'prev', 'prev2',
+                                       'next', 'next2', 'GENIA', 'UMLS']
 
 
 def display_enabled_modules():
-    print
+    print()
     for module,status in enabled.items():
         if status:
-            print '\t', module, '\t', ' ENABLED'
+            print('\t', module, '\t', ' ENABLED')
         else:
-            print '\t', module, '\t', 'DISABLED'
-    print
-
+            print('\t', module, '\t', 'DISABLED')
+    print()
 
 
 def sentence_features_preprocess(data):
