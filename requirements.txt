@@ -5,3 +5,6 @@ scipy
 scikit-learn
 marisa-trie
 repoze.lru
+pandas
+torch
+transformers
